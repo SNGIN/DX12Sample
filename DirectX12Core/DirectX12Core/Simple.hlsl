@@ -3,9 +3,9 @@ cbuffer cbTansMatrix : register(b0) {
 	matrix mWVP;
 	float4 vLightDir;
 	float4 vEye;
-	float vAmbient = float4(0, 0, 0, 0);
-	float vDiffuse = float4(1, 0, 0, 0);
-	float vSpecular = float4(1, 1, 1, 1);
+	float4 vAmbient = float4(0, 0, 0, 0);
+	float4 vDiffuse = float4(1, 0, 0, 0);
+	float4 vSpecular = float4(1, 1, 1, 1);
 };
 
 Texture2D<float4> tex0 : register(t0);
@@ -76,5 +76,5 @@ float4  PSMain(PS_INPUT input) : SV_TARGET{
 	float4 color = tex0.Sample(samp0, input.Tex) / 2;
 	color += input.Color / 2;
 
-	return input.Color;
+	return color;
 }

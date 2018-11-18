@@ -34,7 +34,7 @@ HRESULT Mesh::Init(ID3D12Device* pDevice, const char* FileName, ID3D12CommandAll
 	//•¨‘ÌŒÂX‚ÌˆÊ’u‚ğŒˆ‚ß‚é
 	for (int i = 0; i < NUM_OBJECT; i++)
 	{
-		g_Pos[i] = XMFLOAT3((float)i*0.4 - 0.2, 0, 0);
+		g_Pos[i] = XMFLOAT3((float)i*0.4 - 0.2, 0, 0.25);
 	}
 
 	m_pDevice = pDevice;
@@ -468,7 +468,7 @@ HRESULT Mesh::Draw(ID3D12GraphicsCommandList *command_list) {
 		g_CB[i].mWVP = XMMatrixTranspose(mWorld*mView*mProj);
 		g_CB[i].mW = XMMatrixTranspose(mWorld);
 		g_CB[i].vEye = XMFLOAT4(vEyePt.x, vEyePt.y, vEyePt.z, 1);
-		g_CB[i].vLightDir = XMFLOAT4(0, 0, -1, 0);
+		g_CB[i].vLightDir = XMFLOAT4(0, 0, 1, 0);
 		g_CB[i].vAmbient = XMFLOAT4(m_pMaterial[i].Ka.x, m_pMaterial[i].Ka.y,
 			m_pMaterial[i].Ka.z, m_pMaterial[i].Ka.w);
 		g_CB[i].vDiffuse = XMFLOAT4(m_pMaterial[i].Kd.x, m_pMaterial[i].Kd.y,

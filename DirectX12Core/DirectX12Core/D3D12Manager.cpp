@@ -436,7 +436,7 @@ HRESULT D3D12Manager::CreatePipelineStateObject() {
 
 
 	//ラスタライザステートの設定
-	pipeline_state_desc.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
+	pipeline_state_desc.RasterizerState.CullMode = D3D12_CULL_MODE_FRONT;
 	pipeline_state_desc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
 	pipeline_state_desc.RasterizerState.FrontCounterClockwise = FALSE;
 	pipeline_state_desc.RasterizerState.DepthBias = 0;
@@ -531,7 +531,7 @@ HRESULT D3D12Manager::PopulateCommandList() {
 	//ルートシグネチャの設定
 	command_list_->SetGraphicsRootSignature(root_sugnature_.Get());
 
-	FLOAT clear_color[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
+	FLOAT clear_color[4] = { 0.0f, 0.0f, 0.20f, 1.0f };
 	//ビューポートとシザー矩形の設定
 	command_list_->RSSetViewports(1, &viewport_);
 	command_list_->RSSetScissorRects(1, &scissor_rect_);

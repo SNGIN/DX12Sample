@@ -27,7 +27,7 @@ struct VS_OUTPUT
 //
 //バーテックスシェーダー
 //
-VS_OUTPUT VS(float4 Pos : POSITION, float4 Norm : NORMAL, float2 Tex : TEXCOORD)
+VS_OUTPUT VSMain(float4 Pos : POSITION, float4 Norm : NORMAL, float2 Tex : TEXCOORD)
 {
 	VS_OUTPUT output = (VS_OUTPUT)0;
 
@@ -58,7 +58,7 @@ VS_OUTPUT VS(float4 Pos : POSITION, float4 Norm : NORMAL, float2 Tex : TEXCOORD)
 //
 //ピクセルシェーダー
 //
-float4 PS(VS_OUTPUT input) : SV_Target
+float4 PSMain(VS_OUTPUT input) : SV_Target
 {
 	float4 color = g_texColor.Sample(g_samLinear, input.Tex) / 2;
 	color += input.Color / 2;

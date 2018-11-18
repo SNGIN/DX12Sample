@@ -295,8 +295,28 @@ HRESULT D3D12Manager::CreateRootSignature() {
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT
 	);
 
+	//サンプラの設定
 	D3D12_STATIC_SAMPLER_DESC	sampler_desc{};
+	sampler_desc.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	sampler_desc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	sampler_desc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	sampler_desc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	sampler_desc.MipLODBias = 0.0f;
+	sampler_desc.MaxAnisotropy = 16;
+	sampler_desc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+	sampler_desc.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+	sampler_desc.MinLOD = 0.0f;
+	sampler_desc.MaxLOD = D3D12_FLOAT32_MAX;
+	sampler_desc.ShaderRegister = 0;
+	sampler_desc.RegisterSpace = 0;
+	sampler_desc.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+
 	ComPtr<ID3DBlob> blob{};
+	hr = D3DX12SerializeVersionedRootSignature(&root_signature_desc, D3D_ROOT_SIGNATURE_VERSION_1, &blob, nullptr);
+	if (FAILED(hr)) {
+		return hr;
+	}
+	hr = device_->CreateRootSignature(0, blob->GetBufferPointer(), blob->GetBufferSize(), IID_PPV_ARGS(&root_sugnature_));
 
 
 	//サンプラの設定
@@ -333,12 +353,6 @@ HRESULT D3D12Manager::CreateRootSignature() {
 	root_signature_desc.pParameters = root_parameters;
 	root_signature_desc.NumStaticSamplers = 1;
 	root_signature_desc.pStaticSamplers = &sampler_desc;*/
-
-	hr = D3DX12SerializeVersionedRootSignature(&root_signature_desc, D3D_ROOT_SIGNATURE_VERSION_1, &blob, nullptr);
-	if (FAILED(hr)) {
-		return hr;
-	}
-	hr = device_->CreateRootSignature(0, blob->GetBufferPointer(), blob->GetBufferSize(), IID_PPV_ARGS(&root_sugnature_));
 
 	return hr;
 }
@@ -528,6 +542,16 @@ HRESULT D3D12Manager::SetResourceBarrier(D3D12_RESOURCE_STATES BeforeState, D3D1
 HRESULT D3D12Manager::PopulateCommandList() {
 	HRESULT hr;
 
+	//Reset
+	hr = command_allocator_->Reset();
+	if (FAILED(hr)) {
+		return hr;
+	}
+	hr = command_list_->Reset(command_allocator_.Get(), pipeline_state_.Get());
+	if (FAILED(hr)) {
+		return hr;
+	}
+
 	//ルートシグネチャの設定
 	command_list_->SetGraphicsRootSignature(root_sugnature_.Get());
 
@@ -565,16 +589,6 @@ HRESULT D3D12Manager::PopulateCommandList() {
 
 HRESULT D3D12Manager::Render() {
 	HRESULT hr;
-
-	//Reset
-	hr = command_allocator_->Reset();
-	if (FAILED(hr)) {
-		return hr;
-	}
-	hr = command_list_->Reset(command_allocator_.Get(), nullptr);
-	if (FAILED(hr)) {
-		return hr;
-	}
 	//g_pCommandList->SetGraphicsRootSignature(g_pRootSignature);
 
 	PopulateCommandList();
@@ -583,7 +597,7 @@ HRESULT D3D12Manager::Render() {
 	command_queue_->ExecuteCommandLists(1, &command_lists);
 
 	//実行したコマンドの終了待ち
-	//WaitForPreviousFrame();
+	WaitForPreviousFrame();
 
 	hr = swap_chain_->Present(1, 0);
 	if (FAILED(hr)) {
@@ -594,9 +608,9 @@ HRESULT D3D12Manager::Render() {
 	rtv_index_ = swap_chain_->GetCurrentBackBufferIndex();
 
 	//同期処理
-	command_queue_->Signal(queue_fence_.Get(), frames_);
+	/*command_queue_->Signal(queue_fence_.Get(), frames_);
 	while (queue_fence_->GetCompletedValue() < frames_);
 	frames_++;
-
+	*/
 	return S_OK;
 }

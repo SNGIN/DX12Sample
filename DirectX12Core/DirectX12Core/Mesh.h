@@ -18,7 +18,7 @@ using namespace DirectX;
 #define SAFE_DELETE(x) if(x){delete x; x=0;}
 #define SAFE_DELETE_ARRAY(x) if(x){delete[] x; x=0;}
 
-#define NUM_OBJECT 2 //物体数
+#define NUM_OBJECT 1 //物体数
 
 //コンスタントバッファ用構造体
 struct CBUFFER {

@@ -29,24 +29,6 @@ struct PS_INPUT {//(VS_OUTPUT)
 PS_INPUT VSMain(VS_INPUT input) {
 	PS_INPUT output;
 
-	/*output.Normal = mul(input.Normal, (float3x3)mW);
-	output.Pos = mul(input.Position, mWVP);
-
-	output.Light = vLightDir;
-
-	float3 PosWorld = mul(input.Position, mW);
-	output.EyeVector = vEye - PosWorld;
-	float3 Normal = normalize(output.Normal);
-	float3 LightDir = normalize(output.Light);
-	float3 ViewDir = normalize(output.EyeVector);
-	float4 NL = saturate(dot(Normal, LightDir));
-
-	float3 Reflect = normalize(2 * NL * Normal - LightDir);
-	float4 specular = pow(saturate(dot(Reflect, ViewDir)), 4);
-
-	output.Color = vDiffuse * NL + specular * vSpecular;
-	output.Tex = input.Tex;*/
-
 	float4 Pos = float4(input.Position, 1.0f);
 	float4 Nrm = float4(input.Normal, 1.0f);
 
@@ -73,8 +55,8 @@ PS_INPUT VSMain(VS_INPUT input) {
 }
 
 float4  PSMain(PS_INPUT input) : SV_TARGET{
-	float4 color = tex0.Sample(samp0, input.Tex) / 2;
+	float4 color = tex0.Sample(samp0, input.Tex);
 	color += input.Color / 2;
 
-	return color;
+	return input.Color;
 }

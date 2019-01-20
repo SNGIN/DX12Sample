@@ -1,4 +1,5 @@
 #include "Mesh.h"
+#include <iostream>
 
 HRESULT InitLoader();
 D3D12_SUBRESOURCE_DATA LoadTextureFromFile(char* File);
@@ -484,10 +485,12 @@ HRESULT Mesh::Draw(ID3D12GraphicsCommandList *command_list) {
 	//複数の描画
 	int size = m_pDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
-	//テクスチャーをセット
-	ID3D12DescriptorHeap* ppHeaps2[] = { m_pMaterial[0].pTextureSRVHeap };
-	command_list->SetDescriptorHeaps(_countof(ppHeaps2), ppHeaps2);
-	command_list->SetGraphicsRootDescriptorTable(1, m_pMaterial[0].pTextureSRVHeap->GetGPUDescriptorHandleForHeapStart());
+	for (int i = 0; i < m_dwNumMaterial; i++) {
+		//テクスチャーをセット
+		ID3D12DescriptorHeap* ppHeaps2[] = { m_pMaterial[i].pTextureSRVHeap.Get() };
+		command_list->SetDescriptorHeaps(_countof(ppHeaps2), ppHeaps2);
+		command_list->SetGraphicsRootDescriptorTable(1, m_pMaterial[i].pTextureSRVHeap->GetGPUDescriptorHandleForHeapStart());
+	}
 
 	for (int j = 0; j < NUM_OBJECT; j++)
 	{
@@ -511,6 +514,8 @@ HRESULT Mesh::Draw(ID3D12GraphicsCommandList *command_list) {
 			command_list->DrawIndexedInstanced(m_pMaterial[i].dwNumFace * 3, 1, 0, 0, 0);
 		}
 	}
+
+	std::cout << Cnt << std::endl;
 
 	return S_OK;
 }

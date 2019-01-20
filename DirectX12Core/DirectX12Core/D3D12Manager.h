@@ -70,6 +70,7 @@ private:
 	ComPtr<ID3D12CommandAllocator>		command_allocator_;
 	ComPtr<ID3D12Resource>				render_target_[RTV_NUM];
 	ComPtr<ID3D12DescriptorHeap>		dh_rtv_;
+	D3D12_CPU_DESCRIPTOR_HANDLE			rtv_handle_[RTV_NUM];
 	UINT								rtvDescriptorSize;
 	ComPtr<ID3D12Resource>				depth_buffer_;
 	ComPtr<ID3D12DescriptorHeap>		dh_dsv_;

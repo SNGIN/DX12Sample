@@ -177,7 +177,7 @@ HRESULT D3D12Manager::CreateRenderTargetView() {
 		device_->CreateRenderTargetView(render_target_[n].Get(), NULL, rtvHandle);
 		rtvHandle.Offset(1, rtvDescriptorSize);
 	}
-	/*for (UINT i = 0; i < RTV_NUM; ++i) {
+	for (UINT i = 0; i < RTV_NUM; ++i) {
 		//スワップチェインからバッファを受け取る
 		hr = swap_chain_->GetBuffer(i, IID_PPV_ARGS(&render_target_[i]));
 		if (FAILED(hr)) {
@@ -186,10 +186,10 @@ HRESULT D3D12Manager::CreateRenderTargetView() {
 
 		//RenderTargetViewを作成してヒープデスクリプタに登録
 		rtv_handle_[i] = dh_rtv_->GetCPUDescriptorHandleForHeapStart();
-		rtv_handle_[i].ptr += size * i;
+		rtv_handle_[i].ptr += rtvDescriptorSize * i;
 		device_->CreateRenderTargetView(render_target_[i].Get(), nullptr, rtv_handle_[i]);
-		rtv_handle_[i].Offset(1, size);
-	}*/
+		//rtv_handle_[i].Offset(1, rtvDescriptorSize);
+	}
 
 	return hr;
 }

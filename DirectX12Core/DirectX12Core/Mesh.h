@@ -6,11 +6,14 @@
 #include <d3dx12.h>
 #include <dxgi1_4.h>
 #include <D3Dcompiler.h>
+#include <wrl/client.h>
 
 #pragma comment(lib,"winmm.lib")
 #pragma comment(lib,"d3dCompiler.lib")
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
+
+using namespace Microsoft::WRL;
 
 using namespace DirectX;
 
@@ -52,7 +55,7 @@ struct MY_MATERIAL
 	CHAR szTextureName[110];//テクスチャーファイル名
 
 	ID3D12Resource* pTexture;
-	ID3D12DescriptorHeap* pTextureSRVHeap;
+	ComPtr<ID3D12DescriptorHeap> pTextureSRVHeap;
 
 	DWORD dwNumFace;//そのマテリアルであるポリゴン数
 	MY_MATERIAL()

@@ -58,5 +58,5 @@ float4  PSMain(PS_INPUT input) : SV_TARGET{
 	float4 color = tex0.Sample(samp0, input.Tex);
 	color += input.Color / 2;
 
-	return input.Color;
+	return color;
 }
